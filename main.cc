@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-    string str = "asmitaisasmigooasmidgirlasmita";
+    string str = "aba$babbb$";
     vector<int> sa;
     map<string,int> m;
     int i=0;
@@ -22,7 +22,7 @@ int main()
         sa.push_back(it->second);
     }
     
-    string search_str = "asmi";
+    string search_str = "ba";
     int len = strlen(search_str.c_str());
     int low = 0 , high = sa.size() - 1;
     while(low <= high)
@@ -30,7 +30,6 @@ int main()
         int mid = low + (high - low)/2;
         string mid_str = str.substr(sa.at(mid));
         string i_str;
-        cout<<"\nCompare "<<search_str<<" with " <<mid_str ;
         if(strncmp(search_str.c_str(),mid_str.c_str(),len) == 0)
         { 
             int i = mid-1;
@@ -67,8 +66,7 @@ int main()
         {
             low = mid+1;
         }  
-    }   
-    
+    }       
     return 0;
 }
 
