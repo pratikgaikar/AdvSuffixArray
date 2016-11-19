@@ -1,14 +1,12 @@
 #include "main.h"
 
-int *suffixArray;
 
-const char* txt = ""; 
 /* A suffix array based search function to search a given pattern
    'pat' in given text 'txt' using suffix array suffArr[] */
-
+const char* txt = ""; 
 
 /* This Function is used to obtain the LCP value */
-int getLCP(char *pat, int index, int oldLCP, int *res)
+int getLCP(char *pat, int index, int oldLCP, int *res, int *suffixArray)
 {
 	int count = 0;
 	int m = strlen(pat);
@@ -39,14 +37,14 @@ int getMIN(int LCP1, int LCP2)
 }
 
 
-int firstLCP(char *pat, int n)
+int firstLCP(char *pat, int n, int *suffixArray)
 {
         int m = strlen(pat); // get length of pattern, needed for strncmp()
 	int low = 0;
 	int high = n-1;
 	int res = 0;
-	int LCP1 = getLCP(pat, low, 0, &res);
-	int LCP2 = getLCP(pat, high, 0, &res);
+	int LCP1 = getLCP(pat, low, 0, &res, suffixArray);
+	int LCP2 = getLCP(pat, high, 0, &res, suffixArray);
 	int mid = 0;
 	int midLCP = 0;
 
@@ -56,7 +54,7 @@ int firstLCP(char *pat, int n)
                 mid = low + (high-low)/2;
 
 		midLCP = getMIN(LCP1, LCP2);
-		midLCP = midLCP+ getLCP(pat,mid, midLCP, &res);
+		midLCP = midLCP+ getLCP(pat,mid, midLCP, &res, suffixArray);
 
 		if( ( mid == 0 || strncmp(pat + getMIN(LCP1,midLCP), txt+suffixArray[mid-1], m)>0) && res == 0)
                 {
@@ -81,7 +79,7 @@ int firstLCP(char *pat, int n)
 
 /* This function will return the first occurance of pattern */
 
-int first(char *pat, int n)
+/*int first(char *pat, int n)
 {
 	int m = strlen(pat);
 	int high = n-1;
@@ -107,19 +105,18 @@ int first(char *pat, int n)
 			high =mid -1;
 	}
 	return -1;
-}
+}*/
 
 
 /* This function will retrun the last occurance of Pattern */
 
-int last(char *pat, int n)
+/*int last(char *pat, int n)
 {
         int m = strlen(pat);
 	int high = n-1;
 	int low = 0;
 	int mid = 0;
 	int res = 0;
-
         while(low <= high)
         {
                 mid = low + (high-low)/2;
@@ -136,16 +133,16 @@ int last(char *pat, int n)
 			low = mid + 1;
         }
         return -1;
-}
+}*/
 
-int lastLCP(char *pat, int n)
+int lastLCP(char *pat, int n, int *suffixArray)
 {
         int m = strlen(pat);
         int low = 0;
         int high = n-1;
         int res = 0;
-        int LCP1 = getLCP(pat, low, 0, &res);
-        int LCP2 = getLCP(pat, high, 0, &res);
+        int LCP1 = getLCP(pat, low, 0, &res, suffixArray);
+        int LCP2 = getLCP(pat, high, 0, &res, suffixArray);
         int mid = 0;
         int midLCP = 0;
 
@@ -155,7 +152,7 @@ int lastLCP(char *pat, int n)
                 mid = low + (high-low)/2;
 
                 midLCP = getMIN(LCP1, LCP2);
-                midLCP = midLCP+ getLCP(pat,mid, midLCP, &res);
+                midLCP = midLCP+ getLCP(pat,mid, midLCP, &res, suffixArray);
 
                 if( ( mid == n-1 || strncmp(pat + getMIN(LCP2,midLCP), txt+suffixArray[mid+1] + getMIN(LCP2,midLCP) , m)<0) && res == 0)
                 {
@@ -216,12 +213,15 @@ bool cmp(int a, int b)
 }
 
 
-void  createSuffixArray(int n)
+int * createSuffixArray(int n)
 {
+	int *suffix_array;
+	suffix_array= new int[n];
 	for (int i = 0; i < n; i++)
-		suffixArray[i] = i;
+		suffix_array[i] = i;
 
-	sort(suffixArray, suffixArray+n, cmp);
+	sort(suffix_array, suffix_array+n, cmp);
+	return suffix_array;	
 }
 
 
@@ -233,7 +233,7 @@ void printArr(int arr[], int n)
 }
 
 
-void searchAllPatterns(char* pat, int n)
+/*void searchAllPatterns(char* pat, int n)
 {
 	int count = -1;
 	int l = last(pat,n);
@@ -248,16 +248,16 @@ void searchAllPatterns(char* pat, int n)
 	}
 	else
 		cout <<"Pattern Not Found" << '\n';	
-}
+}*/
 
 
 
-void searchAllPatternsWithLCP(char* pat, int n)
+void searchAllPatternsWithLCP(char* pat, int n, int *suffixArray)
 {
         int count = -1;
 	
-        int l = lastLCP(pat,n);
-        int f = firstLCP(pat, n);
+        int l = lastLCP(pat,n,suffixArray);
+        int f = firstLCP(pat,n,suffixArray);
         if(l!=-1 && f!=-1)
                 count = l-f+1;
         if(count>0)
@@ -278,7 +278,7 @@ int main()
 	string line;
 	string inputString;
 	string a = ">";
-	ifstream myfile ("/home/apoorv30/test_data.fa");
+	ifstream myfile ("/home/megatron/AdvSuffixArray/test_data.fa");
 	if (myfile.is_open())
 	{
 		while ( getline (myfile,line) )
@@ -297,11 +297,14 @@ int main()
 		 cout << "Unable to open file";
 		 exit(0); 
 	}
+
+	int *suffixArray;
+	
 	txt = inputString.c_str();
 
 	int n = strlen(txt);
-	suffixArray = new int[n];
-	createSuffixArray(n);
+	
+	suffixArray = createSuffixArray(n);
 	//printArr(suffixArray,n);
 
 	char pat[] = "PRATIK";
@@ -314,7 +317,7 @@ int main()
 	//searchAllPatterns(pat,n);
 
 	/* Search All the Occurance with LCP */
-	searchAllPatternsWithLCP(pat, n);
+	searchAllPatternsWithLCP(pat,n,suffixArray);
 
 	return 0;
 }
