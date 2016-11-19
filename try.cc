@@ -132,7 +132,8 @@ void searchAllPatterns(char* pat, int n)
 	int count = -1;
 	int l = last(pat, 0, n-1, n);
 	int f = first(pat, 0, n-1, n);
-	count = l-f+1;
+	if(l!=-1 && f!=-1)
+		count = l-f+1;
 	if(count>0)
 	{
 		cout <<"Pattern Appeared ---> " << count << '\n';
