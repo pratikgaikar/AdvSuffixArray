@@ -1,10 +1,5 @@
-#include <iostream>
-#include <map>
-#include <vector>
-#include <cstring>
-#include <fstream>
-#include <algorithm>
-using namespace std;
+#include "main.h"
+
 int *suffixArray;
 
 const char* txt = ""; 
@@ -34,7 +29,6 @@ int getLCP(char *pat, int index, int oldLCP, int *res)
 			break;
 		}
 	}
-	
 	return count;
 }
 
@@ -298,8 +292,11 @@ int main()
 		cout <<"Length of string is ---- >" << inputString.length() <<'\n';
 		myfile.close();
 	}
-	else cout << "Unable to open file"; 
-
+	else
+	{
+		 cout << "Unable to open file";
+		 exit(0); 
+	}
 	txt = inputString.c_str();
 
 	int n = strlen(txt);
