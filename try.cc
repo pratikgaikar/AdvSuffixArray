@@ -11,16 +11,94 @@ const char* txt = "";
 /* A suffix array based search function to search a given pattern
    'pat' in given text 'txt' using suffix array suffArr[] */
 
+
+/* This Function is used to obtain the LCP value */
+int getLCP(char *pat, int index, int oldLCP, int *res)
+{
+	int count = 0;
+	int m = strlen(pat);
+
+	for(int i = 0; i < m-oldLCP; i++)
+	{
+		if(pat[i+oldLCP] == txt[suffixArray[index]+i+oldLCP])
+		{
+			*res = 0;
+			count++;
+		}
+		else
+		{
+			if(pat[i+oldLCP] < txt[suffixArray[index]+i+oldLCP])
+				*res = -1;
+			else
+				*res = 1;
+			break;
+		}
+	}
+	
+	return count;
+}
+
+
+int getMIN(int LCP1, int LCP2)
+{
+	return LCP1>LCP2?LCP2:LCP1;
+}
+
+
+int firstLCP(char *pat, int n)
+{
+        int m = strlen(pat); // get length of pattern, needed for strncmp()
+	int low = 0;
+	int high = n-1;
+	int res = 0;
+	int LCP1 = getLCP(pat, low, 0, &res);
+	int LCP2 = getLCP(pat, high, 0, &res);
+	int mid = 0;
+	int midLCP = 0;
+
+
+        while(low <= high)
+        {
+                mid = low + (high-low)/2;
+
+		midLCP = getMIN(LCP1, LCP2);
+		midLCP = midLCP+ getLCP(pat,mid, midLCP, &res);
+
+		if( ( mid == 0 || strncmp(pat + getMIN(LCP1,midLCP), txt+suffixArray[mid-1], m)>0) && res == 0)
+                {
+                        cout << "First Occurance Index ----> " << mid << " Index in text ---> "<< suffixArray[mid] <<'\n';
+                        return mid;
+                }
+                else if(res > 0)
+		{
+                        low = mid + 1;
+			LCP1 = midLCP;
+		}	
+                else
+		{
+			high = mid -1;
+                        LCP2 = midLCP;
+        	}
+	}
+        return -1;
+}
+
+
+
 /* This function will return the first occurance of pattern */
 
-int first(char *pat, int low, int high, int n)
+int first(char *pat, int n)
 {
-	int m = strlen(pat); // get length of pattern, needed for strncmp()
+	int m = strlen(pat);
+	int high = n-1;
+	int low = 0;
+	int mid = 0;
+	int res = 0;
 
-	if(low <= high)
+	while(low <= high)
 	{
-		int mid = low + (high-low)/2;
-		int res = strncmp(pat, txt+suffixArray[mid], m);
+		mid = low + (high-low)/2;
+		res = strncmp(pat, txt+suffixArray[mid], m);
 
 		if( ( mid == 0 || strncmp(pat, txt+suffixArray[mid-1], m)>0) && res == 0)
 		{
@@ -29,25 +107,29 @@ int first(char *pat, int low, int high, int n)
 		}
 		else if(res > 0)
 		{
-			return first(pat, (mid + 1), high, n);
-		}
+			low = mid +1;
+		}			
 		else
-		{		
-			return first(pat, low, (mid -1), n);
-		}
+			high =mid -1;
 	}
 	return -1;
 }
 
 
-int last(char *pat, int low, int high, int n)
-{
-        int m = strlen(pat); // get length of pattern, needed for strncmp()
+/* This function will retrun the last occurance of Pattern */
 
-        if(low <= high)
+int last(char *pat, int n)
+{
+        int m = strlen(pat);
+	int high = n-1;
+	int low = 0;
+	int mid = 0;
+	int res = 0;
+
+        while(low <= high)
         {
-                int mid = low + (high-low)/2;
-                int res = strncmp(pat, txt+suffixArray[mid], m);
+                mid = low + (high-low)/2;
+                res = strncmp(pat, txt+suffixArray[mid], m);
 
                 if( ( mid == n-1 || strncmp(pat, txt+suffixArray[mid+1], m)<0) && res == 0)
                 {
@@ -55,19 +137,52 @@ int last(char *pat, int low, int high, int n)
                         return mid;
                 }
                 else if(res < 0)
+                        high = mid -1;
+                else
+			low = mid + 1;
+        }
+        return -1;
+}
+
+int lastLCP(char *pat, int n)
+{
+        int m = strlen(pat);
+        int low = 0;
+        int high = n-1;
+        int res = 0;
+        int LCP1 = getLCP(pat, low, 0, &res);
+        int LCP2 = getLCP(pat, high, 0, &res);
+        int mid = 0;
+        int midLCP = 0;
+
+
+        while(low <= high)
+        {
+                mid = low + (high-low)/2;
+
+                midLCP = getMIN(LCP1, LCP2);
+                midLCP = midLCP+ getLCP(pat,mid, midLCP, &res);
+
+                if( ( mid == n-1 || strncmp(pat + getMIN(LCP2,midLCP), txt+suffixArray[mid+1] + getMIN(LCP2,midLCP) , m)<0) && res == 0)
                 {
-                        return last(pat, low, (mid -1), n);
+                        cout << "last Occurance Index ----> " << mid << " Index in text ---> "<< suffixArray[mid] <<'\n';
+                        return mid;
+                }
+                else if(res < 0)
+                {
+                        high = mid - 1;
+                        LCP2 = midLCP;
                 }
                 else
                 {
-			return last(pat, (mid + 1), high, n);
+                        low = mid +1;
+                        LCP1 = midLCP;
                 }
         }
         return -1;
 }
 
-
-void search(char *pat, int *suffArr, int n)
+/*void search(char *pat, int *suffArr, int n)
 {
 	int m = strlen(pat); // get length of pattern, needed for strncmp()
 
@@ -98,28 +213,25 @@ void search(char *pat, int *suffArr, int n)
 
 	// We reach here if return statement in loop is not executed
 	cout << "Pattern not found";
-}
+}*/
 
 
 bool cmp(int a, int b)
 {
-	return strcmp(txt+a, txt +b) < 0? 1 : 0;
+	return strcmp(txt+a, txt+b) < 0? 1 : 0;
 }
 
 
 void  createSuffixArray(int n)
 {
-
 	for (int i = 0; i < n; i++)
-	{
 		suffixArray[i] = i;
-	}
-	sort(suffixArray, suffixArray+n, cmp);
 
+	sort(suffixArray, suffixArray+n, cmp);
 }
 
 
-void printArr(int arr[], int n,const char *txt)
+void printArr(int arr[], int n)
 {
 	for(int i = 0; i < n; i++)
 		cout << i << "--> " <<txt+arr[i] << "---->" << arr[i] << '\n';
@@ -130,8 +242,8 @@ void printArr(int arr[], int n,const char *txt)
 void searchAllPatterns(char* pat, int n)
 {
 	int count = -1;
-	int l = last(pat, 0, n-1, n);
-	int f = first(pat, 0, n-1, n);
+	int l = last(pat,n);
+	int f = first(pat,n);
 	if(l!=-1 && f!=-1)
 		count = l-f+1;
 	if(count>0)
@@ -141,10 +253,27 @@ void searchAllPatterns(char* pat, int n)
 			cout << "Index ---> "<< suffixArray[f+i] << '\n';
 	}
 	else
-		cout <<"Pattern Not Found" << '\n';
+		cout <<"Pattern Not Found" << '\n';	
+}
 
+
+
+void searchAllPatternsWithLCP(char* pat, int n)
+{
+        int count = -1;
 	
-	
+        int l = lastLCP(pat,n);
+        int f = firstLCP(pat, n);
+        if(l!=-1 && f!=-1)
+                count = l-f+1;
+        if(count>0)
+        {
+                cout <<"Pattern Appeared ---> " << count << '\n';
+                for(int i=0;i<count;i++)
+                        cout << "Index ---> "<< suffixArray[f+i] << '\n';
+        }
+        else
+                cout <<"Pattern Not Found" << '\n';
 }
 
 
@@ -152,11 +281,10 @@ int main()
 {
 
 	/* code to read the content of input file */
-
 	string line;
 	string inputString;
 	string a = ">";
-	ifstream myfile ("/home/apoorv30/test_data_small.fa");
+	ifstream myfile ("/home/apoorv30/test_data.fa");
 	if (myfile.is_open())
 	{
 		while ( getline (myfile,line) )
@@ -177,15 +305,20 @@ int main()
 	int n = strlen(txt);
 	suffixArray = new int[n];
 	createSuffixArray(n);
-	printArr(suffixArray, n, txt);
+	//printArr(suffixArray,n);
 
-	/* Search the string in suffix array */
-	char pat[] = "APOORV";   // pattern to be searched in text
+	char pat[] = "PRATIK";
 	cout << "Pattern -->" << pat << '\n';
+
+	/* Search one Occurance */
 	//search(pat, suffixArray, n);
 
-	searchAllPatterns(pat,n);
-	//cout << "Pattern Appeared--->" << num << '\n';	
+	/* Search All the Occurance*/
+	//searchAllPatterns(pat,n);
+
+	/* Search All the Occurance with LCP */
+	searchAllPatternsWithLCP(pat, n);
+
 	return 0;
 }
 
