@@ -47,7 +47,7 @@ int getMIN(int LCP1, int LCP2)
 
 int firstLCP(char *pat, int n)
 {
-        int m = strlen(pat);
+        int m = strlen(pat); // get length of pattern, needed for strncmp()
 	int low = 0;
 	int high = n-1;
 	int res = 0;
@@ -182,7 +182,7 @@ int lastLCP(char *pat, int n)
         return -1;
 }
 
-void search(char *pat, int *suffArr, int n)
+/*void search(char *pat, int *suffArr, int n)
 {
 	int m = strlen(pat); // get length of pattern, needed for strncmp()
 
@@ -213,7 +213,7 @@ void search(char *pat, int *suffArr, int n)
 
 	// We reach here if return statement in loop is not executed
 	cout << "Pattern not found";
-}
+}*/
 
 
 bool cmp(int a, int b)
