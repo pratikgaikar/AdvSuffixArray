@@ -8,6 +8,10 @@
 
 using namespace std;
 
-
-
+extern const char* txt; 
+void printArr(int arr[], int n, const char *txt);
+bool cmp(int a, int b);
+int *createSuffixArray(int n);
+void searchAllPatternsWithLCP(char* pat, int n, int *suffixArray);
+void searchAllPatterns(char* pat, int n, int *suffixArray);
 #endif 
