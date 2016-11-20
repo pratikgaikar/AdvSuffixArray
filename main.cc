@@ -10,7 +10,7 @@ void parseInputFile()
 	/* code to read the content of input file */
 	string line;
 	string skip_char = ">";
-	ifstream myfile ("/home/megatron/AdvSuffixArray/test_data.fa");
+	ifstream myfile ("/home/asmita/AdvSuffixArray/test_data.fa");
 	if (myfile.is_open())
 	{
 		while ( getline (myfile,line) )
@@ -35,7 +35,7 @@ void parseInputFile()
 
 int main()
 {
-	int *suffixArray;
+	int *suffixArray, *suffixArrayEytzinger;
 	parseInputFile();
 	int n = strlen(txt);
 	int choice;
@@ -67,6 +67,8 @@ int main()
 			case 3:
 			cout<<"Enter the pattern "<<endl;
 			cin>>pat;
+			suffixArrayEytzinger = createSuffixArrayEytzinger(suffixArray, n);
+			searchEytzinger(pat, n, suffixArrayEytzinger, 0);		
 			break;
 
 			case 4: 

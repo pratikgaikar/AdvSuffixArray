@@ -14,4 +14,6 @@ bool cmp(int a, int b);
 int *createSuffixArray(int n);
 void searchAllPatternsWithLCP(char* pat, int n, int *suffixArray);
 void searchAllPatterns(char* pat, int n, int *suffixArray);
+int* createSuffixArrayEytzinger(int* suffixArrayEytzinger, int n);
+void searchEytzinger(char* pat, int n, int *suffixArray, int i);
 #endif 
