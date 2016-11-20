@@ -6,7 +6,6 @@ int getMid(int i, int j){
         int count = 0, extra = 0;
         int range = j-i+1;
         int prev = 0, curr = 0, level = 0;
-//      cout << "mid for " <<i << " " << j << endl;
         while(curr < range){
                 curr += pow(2, level);
                 if(curr > range){
@@ -16,8 +15,6 @@ int getMid(int i, int j){
                 prev = curr;
         }
         extra = range - prev;
-//      cout << "extra " << extra << " level " << level << " prev " << prev << " curr " << curr << endl;  
-
         if(extra == 0)
                 return (j+i)/2;
         if((curr - prev)/2 < extra)
@@ -30,12 +27,10 @@ int getMid(int i, int j){
 
 void eytzingerHelper(int arr[],int arr_new[], int i, int j, int i_new){
         int mid = 0; int l = 2*i_new + 1; int r = 2*i_new + 2;
-        //cout << "\n NEW for "<< i_new<< endl;
         if(i > j)
                 return;
         mid = getMid(i,j);
 
-//      cout << "i = "<< i << ", mid = " << mid << ", j = " << j << ", i_new = "<< i_new << endl;
         arr_new[i_new] = arr[mid];
         eytzingerHelper(arr,arr_new, i, mid-1, l);
         eytzingerHelper(arr,arr_new, mid+1,j, r);
@@ -73,7 +68,6 @@ void searchEytzinger(char* pat, int n, int *suffixArray, int i)
                         i = 2*i + 2;
                 }
                 else{
-                        //cout << (txt + suffixArray[i]).c_str().substr(0,6) << endl;
                         cout << "FOUND AT " << i <<  "  " << suffixArray[i] << endl;
                         searchEytzinger(pat, n, suffixArray, 2*i + 1);
                         searchEytzinger(pat, n, suffixArray, 2*i + 2);
@@ -82,7 +76,6 @@ void searchEytzinger(char* pat, int n, int *suffixArray, int i)
 
 
         }
-//      cout << "Pattern Not Found" << endl;
 
 }
 
