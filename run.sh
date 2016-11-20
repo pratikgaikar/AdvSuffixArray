@@ -1,4 +1,5 @@
 g++ -c main.cc 
 g++ -c vanilla.cc
-g++ main.o vanilla.o
+g++ -c eytzinger.cc
+g++ main.o vanilla.o eytzinger.o
 ./a.out
