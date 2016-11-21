@@ -3,9 +3,9 @@
 
 /**************************************************EYTZINGER********************************************************/
 
-int* getKeys(int i, int j, int t){
+int* getKeys(int i, int j, int t, int* key_size){
         int count = 0, extra = 0;
-	int* keys;;
+	int* keys;
         int range = j-i+1;
         int prev = 0, curr = 0, level = 0;
         while(curr < range){
@@ -18,14 +18,15 @@ int* getKeys(int i, int j, int t){
         }
 	level = (int)((float)log(range+1)/(float)log(2*t));
         extra = range - pow(2*t, level) + 1;
-	cout << "\n i = " << i << " j = " << j << " extra = " << extra << " level = " << level <<  endl;
+//	cout << "\n i = " << i << " j = " << j << " extra = " << extra << " level = " << level <<  endl;
 	 if(extra == 0){
 		keys = new int[2*t - 1];
 		for(int it = 1; it <= 2*t - 1; it++){
 			keys[it-1] = i + it*(range +1)/(2*t) -1;
-			cout << akeys[it-1] << ",  "; 	
+			cout << keys[it-1] << ",  "; 	
 		}
-		
+//		cout << "\n returning here" << endl;	
+		*key_size = 2*t -1;
                 return keys;
 	}
 /*
@@ -40,22 +41,27 @@ int* getKeys(int i, int j, int t){
 void btreeHelper(int arr[],int arr_new[], int i, int j, int i_new, int t){
         if(i >= j)
                 return;
-	int* keys= getKeys(i,j,t);
-	cout << "\nI AM HERE" << endl; 
-       	int len = (sizeof(keys)/sizeof(*keys));
-	cout << "I MA HERE" << endl;
+	int key_size = 0;
+	int* pkey_size = &key_size;
+	
+	int* keys = getKeys(i,j,t, pkey_size);
+	cout << "\nI AM HERE KEYS ARE  i_new" << i_new << endl; 
 	int s = i;
 	int it = 0;
-	cout << " len = " << len <<  endl;
-	for(it = 0; it < len; it++){
-                        cout << keys[it-1] << ",  "; 
-	for(it = 0; it < len; it++){
+	for(it = 0; it < key_size; it++)
+                cout << arr[keys[it]] << ",  "; 
+	
+	for(it = 0; it < key_size; it++){
 		arr_new[i_new + it] = arr[keys[it]];
-		cout << "\nCalling for " << " i = "<< s << " j = " << keys[it] - 1 << " newi = " << i_new*(2*t) + (it+1)*(2*t+1) << endl;
-		btreeHelper(arr,arr_new, s, keys[it] - 1, i_new*(2*t) + (it+1)*(2*t+1) ,t);
+		cout << "Calling for " << " i = "<< s << " j = " << keys[it] - 1 << " newi = " << i_new*(2*t) + (it+1)*(2*t-1) << endl;
+		btreeHelper(arr,arr_new, s, keys[it] - 1, i_new*(2*t) + (it+1)*(2*t-1) ,t);
 		s = keys[it] + 1;
 	}
-	btreeHelper(arr,arr_new, i, keys[it] - 1, i_new*(2*t) + (it+1)*(2*t+1) ,t);
+	cout << "PRINT ARRAY for i j "  << i << "  " << j <<  endl;
+
+
+	if(key_size > 0 )	
+		btreeHelper(arr,arr_new, i, keys[it] - 1, i_new*(2*t) + (it+1)*(2*t-1) ,t);
 //        btreeHelper(arr,arr_new, i, mid-1, l);
 //        btreeHelper(arr,arr_new, mid+1,j, r);
 
@@ -70,8 +76,10 @@ int* createSuffixArrayBtree(int *suffix_array, int n)
         for (int i = 0; i < n; i++)
                 suffix_array[i] = i;
 
-        sort(suffix_array, suffix_array+n, cmp);
+//        sort(suffix_array, suffix_array+n, cmp);
 //	return suffix_array_btree;
+	for(int x = 0; x < n; x++)
+		cout << suffix_array[x] << " ";
         btreeHelper(suffix_array, suffix_array_btree, 0, n-1, 0, t);
 	for (int i = 0; i < n; i++)
 		cout << suffix_array_btree[i] << "  ";
