@@ -8,27 +8,64 @@ int* getKeys(int i, int j, int t, int* key_size){
 	int* keys;
         int range = j-i+1;
         int prev = 0, curr = 0, level = 0;
-        while(curr < range){
-                curr += pow(2, level);
-                if(curr > range){
-                        break;
-                }
-                level++;
-                prev = curr;
-        }
+	int max_extra = 0;
+	int max_extra_each = 0;
+        int extra_orj = 0;
 	level = (int)((float)log(range+1)/(float)log(2*t));
+	max_extra = (2*t - 1)*(pow(2*t, level));
+	max_extra_each = max_extra/(2*t);
         extra = range - pow(2*t, level) + 1;
-//	cout << "\n i = " << i << " j = " << j << " extra = " << extra << " level = " << level <<  endl;
+	cout << "\n i = " << i << " j = " << j << " extra = " << extra << " level = " << level <<  endl;
 	 if(extra == 0){
 		keys = new int[2*t - 1];
 		for(int it = 1; it <= 2*t - 1; it++){
 			keys[it-1] = i + it*(range +1)/(2*t) -1;
-			cout << keys[it-1] << ",  "; 	
+			cout << "N"<<keys[it-1] << ",  "; 	
 		}
-//		cout << "\n returning here" << endl;	
 		*key_size = 2*t -1;
-                return keys;
 	}
+	else if(extra < 0){
+		keys = new int[range];
+		for(int it = 1; it <=range; it++){
+                        keys[it-1] = i + it*(range +1)/(2*t) -1;
+                        cout << "EL" <<keys[it-1] << ",  ";
+                }	
+
+	}
+	else{
+		if(range < (2*t -1)){
+			keys = new int[range];
+			for(int it = 1; it <=range; it++){
+                 	       keys[it-1] = i + it -1;
+                        	cout << "EGR"<< keys[it-1] << ",  ";
+                	}
+			*key_size = range;
+		}
+		else{
+			keys = new int[2*t - 1];
+			extra_orj = extra;
+			for(int it = 1; it <= 2*t - 1; it++){
+					
+				if(extra > 0 && extra > max_extra_each){	
+					keys[it-1] = i + it*(range + 1 - extra_orj)/(2*t) -1 + it*max_extra_each;
+					extra -= max_extra_each;
+					cout << "CA"<< keys[it-1] << ",  ";			
+				}
+				else if(extra > 0 && extra <= max_extra_each){
+                        		keys[it-1] = i + it*(range + 1- extra_orj)/(2*t) -1 + extra_orj;
+					extra = 0;
+					cout << "CB" << keys[it-1] << ",  ";
+				}
+				else{
+					keys[it-1] = i + it*(range +1 - extra_orj)/(2*t) -1 + extra_orj;
+					cout <<"CC"<< keys[it-1] << ",  ";
+				}
+                	}
+                	*key_size = 2*t -1;		
+		}
+	
+	}
+	
 /*
         if((curr - prev)/2 < extra)
                 return(i + prev/2 + pow(2, level-1));
@@ -39,7 +76,7 @@ int* getKeys(int i, int j, int t, int* key_size){
 
 
 void btreeHelper(int arr[],int arr_new[], int i, int j, int i_new, int t){
-        if(i >= j)
+        if(i > j)
                 return;
 	int key_size = 0;
 	int* pkey_size = &key_size;
@@ -57,11 +94,13 @@ void btreeHelper(int arr[],int arr_new[], int i, int j, int i_new, int t){
 		btreeHelper(arr,arr_new, s, keys[it] - 1, i_new*(2*t) + (it+1)*(2*t-1) ,t);
 		s = keys[it] + 1;
 	}
-	cout << "PRINT ARRAY for i j "  << i << "  " << j <<  endl;
 
 
-	if(key_size > 0 )	
-		btreeHelper(arr,arr_new, i, keys[it] - 1, i_new*(2*t) + (it+1)*(2*t-1) ,t);
+	if(key_size > 0 ){	
+		cout << "Calling for " << " i = "<< s << " j = " << j << " newi = " << i_new*(2*t) + (it+1)*(2*t-1) << endl;
+		btreeHelper(arr,arr_new, s, j , i_new*(2*t) + (it+1)*(2*t-1) ,t);
+		
+	}
 //        btreeHelper(arr,arr_new, i, mid-1, l);
 //        btreeHelper(arr,arr_new, mid+1,j, r);
 
@@ -71,7 +110,7 @@ void btreeHelper(int arr[],int arr_new[], int i, int j, int i_new, int t){
 int* createSuffixArrayBtree(int *suffix_array, int n)
 {
 	int * suffix_array_btree;
-	int t = 2;
+	int t = 3;
         suffix_array_btree = new int[n];
         for (int i = 0; i < n; i++)
                 suffix_array[i] = i;
