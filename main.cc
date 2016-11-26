@@ -1,16 +1,16 @@
 #include "main.h"
 
-/* A suffix array based search function to search a given pattern
-   'pat' in given text 'txt' using suffix array suffArr[] */
-
 const char *txt ="";
 string inputString;
+ofstream outFile; 
+
 void parseInputFile()
 {
-	/* code to read the content of input file */
 	string line;
 	string skip_char = ">";
-	ifstream myfile ("/home/apoorv30/AdvSuffixArray/test_data.fa");
+	//ifstream myfile ("/home/apoorv30/AdvSuffixArray/test_data.fa");
+	ifstream myfile ("/home/apoorv30/test/test_data.fa");
+
 	if (myfile.is_open())
 	{
 		while ( getline (myfile,line) )
@@ -23,29 +23,75 @@ void parseInputFile()
 		}
 		cout <<"Length of string is ---- >" << inputString.length() <<'\n';
 		txt = inputString.c_str();
-		
 		myfile.close();	
 	}
 	else
 	{
-		 cout << "Unable to open file";
-		 exit(0); 
+		cout << "Unable to open file";
+		exit(0); 
 	}	
 }
 
+
+void parsePatFile(int n, int *suffixArray, int choice)
+{
+
+	const char *pat;
+	string line;
+	int count = 0;
+	int start_s = 0;
+        int stop_s = 0;
+	//ifstream patFile ("/home/apoorv30/AdvSuffixArray/test_pattern.fa");
+	ifstream patFile ("/home/apoorv30/test/ramin_250_400.fa");
+	if (patFile.is_open())
+	{
+		while ( getline (patFile,line) )
+		{
+			pat = line.c_str();
+			//cout << "PATTERN ---> " << pat << '\n';
+
+			outFile << pat;
+			outFile << " ";
+
+			start_s = clock();
+			if(choice == 1)
+				searchAllPatterns(pat,n,suffixArray);
+			if(choice == 2)
+				searchAllPatternsWithLCP(pat,n,suffixArray);
+			if(choice == 3)
+			{
+				count = 0;
+                                searchEytzinger(pat, n, suffixArray, 0, &count);
+				outFile << count << " ";
+			}
+			stop_s = clock();
+			//cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;
+			
+			outFile << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << '\n';
+
+		}
+		patFile.close();
+		outFile.close();
+	}
+	else
+	{
+		cout << "Unable to open file";
+		exit(0); 
+	}
+
+}
+
+
 int main()
 {
-	int *suffixArray, *suffixArrayEytzinger;
+	int *suffixArray;
+	int* suffixArrayEytzinger;
 	parseInputFile();
 	int n = strlen(txt);
 	int choice;
-	char pat[100];
-	int start_s = 0;
-	int stop_s = 0;
-	cout << "Creating Suffix Array..." << '\n';
+	outFile.open ("/home/apoorv30/AdvSuffixArray/test_output.fa");
 	suffixArray = createSuffixArray(n);
-	cout << "Suffix Array Created !!" << '\n';
-	
+
 	while(1)
 	{
 		cout<<"1.Vanilla SERACH"<<endl;
@@ -58,44 +104,27 @@ int main()
 		switch(choice)
 		{
 			case 1:
-			cout<<"Enter the pattern "<<endl;
-			cin>>pat;
-			start_s = clock();
-			searchAllPatterns(pat,n,suffixArray);
-			stop_s = clock();
-			cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;			
-			break;
-
-			case 2: 
-			cout<<"Enter the pattern"<<endl;
-			cin>>pat;
-			start_s = clock();			
-			searchAllPatternsWithLCP(pat,n,suffixArray);
-			stop_s = clock();
-			cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;
-			break;
-
+				cout<<" VANILLA "<<endl;
+				parsePatFile(n, suffixArray, choice);
+				break;
+			
+			case 2:
+				cout<<" VANILLA WITH LCP "<<endl;
+                                parsePatFile(n, suffixArray, choice);
+                                break;
+			
 			case 3:
-			cout<<"Enter the pattern "<<endl;
-			cin>>pat;
-			suffixArrayEytzinger = createSuffixArrayEytzinger(suffixArray, n);
-			start_s = clock();
-			searchEytzinger(pat, n, suffixArrayEytzinger, 0);		
-			stop_s = clock();
-			cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;
-			break;
-
-			case 4: 
-			cout<<"Enter the pattern"<<endl;
-			cin>>pat;
-			break;
+				cout << " EYTZINGER " << endl;
+				suffixArrayEytzinger = createSuffixArrayEytzinger(suffixArray, n);
+				parsePatFile(n, suffixArrayEytzinger, choice);
+				break;
 
 			case 5: exit(0);
-			break;
+				break;
 
 			default: 
-			cout << "Please select among the options" << '\n';
-			break;
+				cout << "Please select among the options" << '\n';
+				break;
 		}
 	}
 	return 0;
