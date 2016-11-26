@@ -16,7 +16,7 @@ int* getKeys(int i, int j, int t, int* key_size){
 	max_extra_each = max_extra/(2*t);
         extra = range - pow(2*t, level) + 1;
 	cout << "\n i = " << i << " j = " << j << " extra = " << extra << " level = " << level <<  endl;
-	 if(extra == 0){
+	if(extra == 0){
 		keys = new int[2*t - 1];
 		for(int it = 1; it <= 2*t - 1; it++){
 			keys[it-1] = i + it*(range +1)/(2*t) -1;
@@ -126,29 +126,68 @@ int* createSuffixArrayBtree(int *suffix_array, int n)
 
 }
 
+void handel_equal_case(int* suffixArray, int n, int s, int j, int t){	
+	int i = j - 1;
+	int x = 0;
+	int curr = (s+j)*(2*t) + (j+1)(2*t-1);
+	if(curr >= n)
+		return;
 
+	while(x < 2*t-1 && x+curr < n){
+		outFile << suffixArray[curr + x] << " ";
+		print_recursively(suffixArray, n, curr + x, t);
+	}
+	
+}
 
-void searchBtree(char* pat, int n, int *suffixArray, int i)
+void print_recursively(int* suffixArray, int n, int i, int t){
+	int x = 0;
+	
+	while(x < 2*t-1 && curr < n){
+		
+                print_recursively(suffixArray, n, curr, t);
+        }
+
+}
+
+void searchBtree(char* pat, int n, int *suffixArray, int i, int t)
 {
         int count = -1;
-
-        int cmp_val = 0;
-
+	int j = 0;
+	int comp_val, comp_prev;
+	int i_new = i;
+	bool rsearch = false;
+	while(i < n){
+		cmp_val = strncmp(pat, txt + suffixArray[i],strlen(pat))
+		i_new*(2*t) + (it+1)*(2*t-1);
+	}
         while(i < n){
-                cmp_val = strncmp(pat, txt + suffixArray[i],strlen(pat));
-                if(cmp_val < 0){
-                        i = 2*i + 1;
-                }
-                else if(cmp_val > 0){
-                        i = 2*i + 2;
-                }
-                else{
-                        cout << "FOUND AT " << i <<  "  " << suffixArray[i] << endl;
-                        searchBtree(pat, n, suffixArray, 2*i + 1);
-                        searchBtree(pat, n, suffixArray, 2*i + 2);
-                        return;
-                }
-
+		j = 0;
+		while(i+j < n && j < (2*t)-1 ){
+			cmp_val = strncmp(pat, txt + suffixArray[i+j],strlen(pat))	
+			if(comp_val < 0){
+				i_new = (i+j)*(2*t) + (j+1)(2*t-1);
+				break;
+			}
+			else if(comp_val > 0){
+				j++;
+				i_new = (i+j)*(2*t) + j*(2*t-1);
+			}
+			if(comp_val == 0){
+				cout << "FOUND AT INDEX" << suffixArray[j];
+				if(flag == true){ // First OCCOURANCE OF EQUAL SO SEARCH LEFT
+					searchBtree(pat, n, suffixArray, (i+j)*(2*t) + (j+1)(2*t-1),t);
+					rsearch = true;	
+				}
+				else{
+					j++;
+					handel_equal_case(suffixArray,i+j,t); // WIL PriNT EVERYTHING BETWEEN i-1 AND i
+					i_new = (i+j)*(2*t) + j*(2*t-1);
+				}
+				flag = false;
+			}
+			i = i_new;
+		}
 
         }
 
