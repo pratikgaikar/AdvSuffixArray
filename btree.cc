@@ -127,27 +127,23 @@ int* createSuffixArrayBtree(int *suffix_array, int n)
 }
 
 void handel_equal_case(int* suffixArray, int n, int s, int j, int t){	
-	int i = j - 1;
-	int x = 0;
-	int curr = (s+j)*(2*t) + (j+1)(2*t-1);
-	if(curr >= n)
-		return;
+	int curr = s*(2*t) + (j+1)(2*t-1);
+	if(curr < n)
+		print_recursively(suffixArray, n, curr, t);
 
-	while(x < 2*t-1 && x+curr < n){
-		outFile << suffixArray[curr + x] << " ";
-		print_recursively(suffixArray, n, curr + x, t);
-	}
-	
 }
 
-void print_recursively(int* suffixArray, int n, int i, int t){
+void print_recursively(int* suffixArray, int n, int s, int t){
 	int x = 0;
 	
-	while(x < 2*t-1 && curr < n){
-		
-                print_recursively(suffixArray, n, curr, t);
+	while(x < 2*t-1 && s+x < n){
+		outFile << suffixArray[x+s] << " ";
+                print_recursively(suffixArray, n, s*(2*t) + (x+1)(2*t-1), t);
+		x++;
         }
-
+	if(s+x < n)
+		print_recursively(suffixArray, n, s*(2*t) + (x+1)(2*t-1), t);
+	
 }
 
 void searchBtree(char* pat, int n, int *suffixArray, int i, int t)
@@ -156,38 +152,34 @@ void searchBtree(char* pat, int n, int *suffixArray, int i, int t)
 	int j = 0;
 	int comp_val, comp_prev;
 	int i_new = i;
-	bool rsearch = false;
-	while(i < n){
-		cmp_val = strncmp(pat, txt + suffixArray[i],strlen(pat))
-		i_new*(2*t) + (it+1)*(2*t-1);
-	}
+	bool flag = true;
         while(i < n){
 		j = 0;
 		while(i+j < n && j < (2*t)-1 ){
 			cmp_val = strncmp(pat, txt + suffixArray[i+j],strlen(pat))	
 			if(comp_val < 0){
-				i_new = (i+j)*(2*t) + (j+1)(2*t-1);
+				i_new = i*(2*t) + (j+1)(2*t-1);
 				break;
 			}
 			else if(comp_val > 0){
 				j++;
-				i_new = (i+j)*(2*t) + j*(2*t-1);
+				i_new = i*(2*t) + (j+1)*(2*t-1);
 			}
 			if(comp_val == 0){
-				cout << "FOUND AT INDEX" << suffixArray[j];
+				cout << "FOUND AT INDEX" << suffixArray[i+j];
 				if(flag == true){ // First OCCOURANCE OF EQUAL SO SEARCH LEFT
-					searchBtree(pat, n, suffixArray, (i+j)*(2*t) + (j+1)(2*t-1),t);
-					rsearch = true;	
+					searchBtree(pat, n, suffixArray, (i)*(2*t) + (j+1)(2*t-1),t);
+					flag = false;	
 				}
 				else{
-					j++;
-					handel_equal_case(suffixArray,i+j,t); // WIL PriNT EVERYTHING BETWEEN i-1 AND i
-					i_new = (i+j)*(2*t) + j*(2*t-1);
+					handel_equal_case(suffixArray, n, j, t); // WIL PriNT EVERYTHING BETWEEN (i+j)-1 AND (i+j)
 				}
+				j++;
+				i_new = i*(2*t) + (j+1)*(2*t-1);
 				flag = false;
 			}
-			i = i_new;
 		}
+		i = i_new;
 
         }
 
