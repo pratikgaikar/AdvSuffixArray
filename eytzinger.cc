@@ -44,7 +44,7 @@ int* createSuffixArrayEytzinger(int *suffix_array, int n)
         suffix_array_eytzinger = new int[n];
         for (int i = 0; i < n; i++)
                 suffix_array[i] = i;
-
+	
         sort(suffix_array, suffix_array+n, cmp);
         eytzingerHelper(suffix_array, suffix_array_eytzinger, 0, n-1, 0);
         return suffix_array_eytzinger;
@@ -53,10 +53,8 @@ int* createSuffixArrayEytzinger(int *suffix_array, int n)
 
 
 
-void searchEytzinger(char* pat, int n, int *suffixArray, int i)
+void searchEytzinger(const char* pat, int n, int *suffixArray, int i, int* count)
 {
-        int count = -1;
-
         int cmp_val = 0;
 
         while(i < n){
@@ -68,9 +66,12 @@ void searchEytzinger(char* pat, int n, int *suffixArray, int i)
                         i = 2*i + 2;
                 }
                 else{
-                        cout << "FOUND AT " << i <<  "  " << suffixArray[i] << endl;
-                        searchEytzinger(pat, n, suffixArray, 2*i + 1);
-                        searchEytzinger(pat, n, suffixArray, 2*i + 2);
+                        //cout << "FOUND AT " << i <<  "  " << suffixArray[i] << endl;
+			//outFile << suffixArray[i] << " ";
+                        *count = *count + 1;
+			//cout << "COUNT" << *count << endl;
+			searchEytzinger(pat, n, suffixArray, 2*i + 1, count);
+                        searchEytzinger(pat, n, suffixArray, 2*i + 2, count);
                         return;
                 }
 
