@@ -19,5 +19,6 @@ void searchAllPatterns(const char* pat, int n, int *suffixArray);
 int* createSuffixArrayEytzinger(int* suffixArrayEytzinger, int n);
 void searchEytzinger(const char* pat, int n, int *suffixArray, int i, int* count);
 void write_output(char *data);
-
+void searchBtree(char* pat, int n, int *suffixArray, int i, int t);
+int* createSuffixArrayBtree(int *suffix_array, int n, int t);
 #endif 
