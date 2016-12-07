@@ -1,15 +1,17 @@
 #include "main.h"
 
-const char *txt ="";
+char *txt = NULL;
+
 string inputString;
 ofstream outFile; 
 
-void parseInputFile()
+char *parseInputFile()
 {
 	string line;
+	const char *text = NULL;
 	string skip_char = ">";
 	//ifstream myfile ("/home/apoorv30/AdvSuffixArray/test_data.fa");
-	ifstream myfile ("/home/apoorv30/test/test_data.fa");
+	ifstream myfile ("/home/warlock/AdvSuffixArray/test_data.fa");
 
 	if (myfile.is_open())
 	{
@@ -22,74 +24,77 @@ void parseInputFile()
 			}
 		}
 		cout <<"Length of string is ---- >" << inputString.length() <<'\n';
-		txt = inputString.c_str();
+		text = inputString.c_str();
 		myfile.close();	
 	}
 	else
 	{
-		cout << "Unable to open file";
+		cout << "Unable to open file1";
 		exit(0); 
 	}	
+	return (char *)text;
 }
 
 
 void parsePatFile(int n, int *suffixArray, int choice)
 {
-
-	const char *pat;
-	string line;
-	int count = 0;
-	int start_s = 0;
-        int stop_s = 0;
-	//ifstream patFile ("/home/apoorv30/AdvSuffixArray/test_pattern.fa");
-	ifstream patFile ("/home/apoorv30/test/ramin_250_400.fa");
-	if (patFile.is_open())
-	{
-		while ( getline (patFile,line) )
+	string str;
+	system("sync; echo 1 > /proc/sys/vm/drop_caches");
+	int f, l, pat_len;
+	int start_s, stop_s;
+  	std::ifstream pattern_file("/home/warlock/AdvSuffixArray/test_inputs/dtmin_250_400.fa", std::ios::binary | std::ios::ate); 
+    	std::streamsize pattern_size = pattern_file.tellg(); 
+    	pattern_file.seekg(0, std::ios::beg); 
+    	std::vector<std::string> pattern_vector; 
+    	std::vector<std::string> pattern_vector1; 
+    	std::vector<std::string> pattern_vector2; 
+    	while (getline(pattern_file, str)) 
+    	{ 
+        	pattern_vector.push_back(str); 
+        	str[str.size() - 1]--; 
+        	pattern_vector1.push_back(str); 
+        	str[str.size() - 1]++; 
+        	str[str.size() - 1]++; 
+        	pattern_vector2.push_back(str);
+	}
+ 
+	
+	for (int i = 0; i < pattern_vector.size(); i++) 
+	{   	
+		pat_len =  strlen((char*)pattern_vector1[i].c_str());
+		if(choice == 1)
 		{
-			pat = line.c_str();
-			//cout << "PATTERN ---> " << pat << '\n';
-
-			outFile << pat;
-			outFile << " ";
-
 			start_s = clock();
-			if(choice == 1)
-				searchAllPatterns(pat,n,suffixArray);
-			if(choice == 2)
-				searchAllPatternsWithLCP(pat,n,suffixArray);
-			if(choice == 3)
-			{
-				count = 0;
-                                searchEytzinger(pat, n, suffixArray, 0, &count);
-				outFile << count << " ";
-			}
+			f = search((char*)pattern_vector1[i].c_str(),suffixArray,n, pat_len);
+			l = search((char*)pattern_vector2[i].c_str(),suffixArray,n, pat_len);
 			stop_s = clock();
 			//cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;
+				
+			outFile <<" "<<l-f<<" "<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << '\n';
+        		//cout << "Number of occurences :" << l - f << "\n"; 
 			
-			outFile << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << '\n';
-
+    		} 
+		if(choice == 2)
+		{
+			start_s = clock();
+			f = search_with_LCP((char*)pattern_vector1[i].c_str(),suffixArray,n, pat_len);
+			l = search_with_LCP((char*)pattern_vector2[i].c_str(),suffixArray,n, pat_len);
+			stop_s = clock();
+			//cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;
+			outFile <<" "<<l-f<<" "<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << '\n';
+			//cout << "Number of occurences :" << l - f << "\n"; 
 		}
-		patFile.close();
-		outFile.close();
-	}
-	else
-	{
-		cout << "Unable to open file";
-		exit(0); 
-	}
-
+	}    
 }
-
 
 int main()
 {
 	int *suffixArray;
 	int* suffixArrayEytzinger;
-	parseInputFile();
+	txt = parseInputFile();
 	int n = strlen(txt);
 	int choice;
-	outFile.open ("/home/apoorv30/AdvSuffixArray/test_output.fa");
+	outFile.open ("/home/warlock/AdvSuffixArray/test_output.fa");
 	suffixArray = createSuffixArray(n);
 
 	while(1)
@@ -115,8 +120,8 @@ int main()
 			
 			case 3:
 				cout << " EYTZINGER " << endl;
-				suffixArrayEytzinger = createSuffixArrayEytzinger(suffixArray, n);
-				parsePatFile(n, suffixArrayEytzinger, choice);
+				//suffixArrayEytzinger = createSuffixArrayEytzinger(suffixArray, n);
+				//parsePatFile(n, suffixArrayEytzinger, choice);
 				break;
 
 			case 5: exit(0);

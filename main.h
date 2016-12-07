@@ -5,20 +5,22 @@
 #include <cstring>
 #include <fstream>
 #include <algorithm>
-
+#include <vector>
 using namespace std;
 
 extern ofstream outFile;
 
-extern const char* txt; 
-void printArr(int arr[], int n, const char *txt);
+extern char *txt;
+//void printArr(int arr[], int n, const char *txt);
 bool cmp(int a, int b);
 int *createSuffixArray(int n);
-void searchAllPatternsWithLCP(const char* pat, int n, int *suffixArray);
-void searchAllPatterns(const char* pat, int n, int *suffixArray);
-int* createSuffixArrayEytzinger(int* suffixArrayEytzinger, int n);
-void searchEytzinger(const char* pat, int n, int *suffixArray, int i, int* count);
+//void searchAllPatternsWithLCP(char* pat, int n, int *suffixArray);
+//void searchAllPatterns(char* pat, int n, int *suffixArray);
+int search_with_LCP(char *pattern, int *suffixArray, int textLength, int patternLength);
+int search(char *pattern, int *suffixArray, int textLength, int patternLength);
+//int search(char *pattern, int *suffixArray, int textLength, int patternLength);
+/*int* createSuffixArrayEytzinger(int* suffixArrayEytzinger, int n);
+void searchEytzinger(const char* pat, int n, int *suffixArray, int i, int* count);*/
 void write_output(char *data);
-void searchBtree(char* pat, int n, int *suffixArray, int i, int t);
-int* createSuffixArrayBtree(int *suffix_array, int n, int t);
+
 #endif 
