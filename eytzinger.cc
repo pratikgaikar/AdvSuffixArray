@@ -53,12 +53,12 @@ int* createSuffixArrayEytzinger(int *suffix_array, int n)
 
 
 
-void searchEytzinger(const char* pat, int n, int *suffixArray, int i, int* count)
+void searchEytzinger(char* pat, int n, int *suffixArray, int i, int pat_len,int* count)
 {
         int cmp_val = 0;
 
         while(i < n){
-                cmp_val = strncmp(pat, txt + suffixArray[i],strlen(pat));
+                cmp_val = strncmp(pat, txt + suffixArray[i],pat_len);
                 if(cmp_val < 0){
                         i = 2*i + 1;
                 }
@@ -70,8 +70,8 @@ void searchEytzinger(const char* pat, int n, int *suffixArray, int i, int* count
 			//outFile << suffixArray[i] << " ";
                         *count = *count + 1;
 			//cout << "COUNT" << *count << endl;
-			searchEytzinger(pat, n, suffixArray, 2*i + 1, count);
-                        searchEytzinger(pat, n, suffixArray, 2*i + 2, count);
+			searchEytzinger(pat, n, suffixArray, 2*i + 1, pat_len,count);
+                        searchEytzinger(pat, n, suffixArray, 2*i + 2, pat_len,count);
                         return;
                 }
 

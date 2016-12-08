@@ -110,81 +110,82 @@ void btreeHelper(int arr[],int arr_new[], int i, int j, int i_new, int t){
 int* createSuffixArrayBtree(int *suffix_array, int n, int t)
 {
 	int * suffix_array_btree;
-cout << "INSIDE CREATE" << endl;	
+//cout << "INSIDE CREATE" << endl;	
         suffix_array_btree = new int[n];
 //        for (int i = 0; i < n; i++)
 //                suffix_array[i] = i;
 
 //        sort(suffix_array, suffix_array+n, cmp);
 //	return suffix_array_btree;
-	for(int x = 0; x < n; x++)
-		cout << suffix_array[x] << " ";
+//	for(int x = 0; x < n; x++)
+		//cout << suffix_array[x] << " ";
 
-	cout << "\n\n" << endl;
+	//cout << "\n\n" << endl;
         btreeHelper(suffix_array, suffix_array_btree, 0, n-1, 0, t);
-	for (int i = 0; i < n; i++)
-		cout << suffix_array_btree[i] << "  ";
-	cout <<"\n\n\n" << endl;
+	//for (int i = 0; i < n; i++)
+		//cout << suffix_array_btree[i] << "  ";
+	//cout <<"\n\n\n" << endl;
         return suffix_array_btree;
 
 }
 
-void print_recursively(int* suffixArray, int n, int s, int t){
+void print_recursively(int* suffixArray, int n, int s, int t, int* count){
 	int x = 0;
 	
 	while(x < 2*t-1 && s+x < n){
-		cout << "FOUND AT INDEX " << suffixArray[x+s] << "  " << txt + suffixArray[x+s]<< endl;
-                print_recursively(suffixArray, n, s*(2*t) + (x+1)*(2*t-1), t);
+		*count += 1;
+//		cout << "FOUND AT INDEX " << suffixArray[x+s] << "  " << txt + suffixArray[x+s]<< endl;
+                print_recursively(suffixArray, n, s*(2*t) + (x+1)*(2*t-1), t, count);
 		x++;
         }
 	if(s+x < n)
-		print_recursively(suffixArray, n, s*(2*t) + (x+1)*(2*t-1), t);
+		print_recursively(suffixArray, n, s*(2*t) + (x+1)*(2*t-1), t, count);
 	
 }
 
-void handel_equal_case(int* suffixArray, int n, int s, int j, int t){
+void handel_equal_case(int* suffixArray, int n, int s, int j, int t, int* count){
         int curr = s*(2*t) + (j+1)*(2*t-1);
-	cout << "IN HANDEL EQUAL" << endl; 	  
+//	cout << "IN HANDEL EQUAL" << endl; 	  
       if(curr < n)
-                print_recursively(suffixArray, n, curr, t);
+                print_recursively(suffixArray, n, curr, t, count);
 
 }
 
 
 
-void searchBtree(char* pat, int n, int *suffixArray, int i, int t)
+void searchBtree(char* pat, int n, int *suffixArray, int i, int t,int pat_len, int *count)
 {
-        int count = -1;
 	int j = 0;
 	int comp_val;
 	int i_new = i;
 	bool flag = true;
-	cout << "SEARCHING" << endl;
+//	cout << "SEARCHING" << endl;
         while(i < n){
 		j = 0;
 		flag = true;
 		while(i+j < n && j < (2*t)-1 ){
-			comp_val = strncmp(pat, txt + suffixArray[i+j],strlen(pat));
-			cout << suffixArray[i+j] << "  " << txt + suffixArray[i+j] << " " <<  comp_val << endl;	
+			comp_val = strncmp(pat, txt + suffixArray[i+j],pat_len);
+			//cout << suffixArray[i+j] << "  " << txt + suffixArray[i+j] << " " <<  comp_val << endl;	
 			if(comp_val < 0){
-				cout << "left of " << i+j << endl;
+//				cout << "left of " << i+j << endl;
 				i_new = i*(2*t) + (j+1)*(2*t-1);
 				break;
 			}
 			else if(comp_val > 0){
-				cout << "right of " << i+j << endl;
+//				cout << "right of " << i+j << endl;
 				j++;
 
 				i_new = i*(2*t) + (j+1)*(2*t-1);
 			}
 			else{
-				cout << "FOUND AT INDEX" << suffixArray[i+j] << "   "<< txt + suffixArray[i+j] << endl ;
+//				cout << "FOUND AT INDEX" << suffixArray[i+j] << "   "<< txt + suffixArray[i+j] << endl ;
+				*count += 1;
 				if(flag == true){ // First OCCOURANCE OF EQUAL SO SEARCH LEFT
-					searchBtree(pat, n, suffixArray, i*(2*t) + (j+1)*(2*t-1),t);
+					searchBtree(pat, n, suffixArray, i*(2*t) + (j+1)*(2*t-1),t, pat_len,count);
 					flag = false;	
 				}
 				else{
-					handel_equal_case(suffixArray, n, i, j, t); // WIL PriNT EVERYTHING BETWEEN (i+j)-1 AND (i+j)
+					handel_equal_case(suffixArray, n, i, j, t, count); // WIL PriNT EVERYTHING BETWEEN (i+j)-1 AND (i+j)
 				}
 				j++;
 				i_new = i*(2*t) + (j+1)*(2*t-1);
