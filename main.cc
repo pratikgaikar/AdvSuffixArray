@@ -3,6 +3,7 @@
 char *txt = NULL;
 string inputString;
 ofstream outFile;
+
 vector<int> pattern_vector_e;  
 vector<int> pattern_vector_b; 
 
@@ -75,10 +76,10 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
 			l = search((char*)pattern_vector2[i].c_str(),suffixArray,n, pat_len);
 			stop_s = clock();
 			outFile<<pattern_vector[i].c_str()<<"\t"<<l-f<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
-			for(int j=f;j<l;j++)
+			/*for(int j=f;j<l;j++)
 			{
                         	outFile<<"\t"<<suffixArray[j];				
-			}
+			}*/
 			outFile<<'\n';
 			
     		} 
@@ -89,10 +90,10 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
 			l = search_with_LCP((char*)pattern_vector2[i].c_str(),suffixArray,n, pat_len);
 			stop_s = clock();
 			outFile<<pattern_vector[i].c_str()<<"\t"<<l-f<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;	
-			for(int j=f;j<l;j++)
+			/*for(int j=f;j<l;j++)
 			{
                         	outFile<<"\t"<<suffixArray[j];				
-			}
+			}*/
 			outFile<<'\n';		
 		}
 		if(choice == 3)
@@ -103,10 +104,10 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
                         searchEytzinger((char*)pattern_vector[i].c_str(), n, suffixArray, 0, pat_len,&count);
 			stop_s = clock();                        
                         outFile<<pattern_vector[i].c_str()<<"\t"<<count<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
-			for(int j=0;j<pattern_vector_e.size();j++)
+			/*for(int j=0;j<pattern_vector_e.size();j++)
 			{
 				outFile<<"\t"<<pattern_vector_e[j];	
-			}
+			}*/
 			outFile<<'\n';
 		}
 		if(choice == 4)
@@ -117,10 +118,10 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
                         searchBtree((char* )pattern_vector[i].c_str(), n, suffixArray, 0, t, pat_len, &count);
                         stop_s = clock();
                         outFile<<pattern_vector[i].c_str()<<"\t"<<count<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
-			for(int j=0;j<pattern_vector_b.size();j++)
+			/*for(int j=0;j<pattern_vector_b.size();j++)
 			{
 				outFile<<"\t"<<pattern_vector_b[j];	
-			}
+			}*/
 			outFile<<'\n';
                 }
 	}

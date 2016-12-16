@@ -104,7 +104,7 @@ void print_recursively(int* suffixArray, int n, int s, int t, int* count){
 	int x = 0;
 	
 	while(x < 2*t-1 && s+x < n){
-		pattern_vector_b.push_back(suffixArray[s+x]); 
+		//pattern_vector_b.push_back(suffixArray[s+x]); 
 		*count += 1;
                 print_recursively(suffixArray, n, s*(2*t) + (x+1)*(2*t-1), t, count);
 		x++;
@@ -150,7 +150,7 @@ void searchBtree(char* pat, int n, int *suffixArray, int i, int t,int pat_len, i
 			else{
 
 				*count += 1;
-				pattern_vector_b.push_back(suffixArray[i+j]); 
+				//pattern_vector_b.push_back(suffixArray[i+j]); 
 				if(flag == true){ // First OCCOURANCE OF EQUAL SO SEARCH LEFT
 					searchBtree(pat, n, suffixArray, i*(2*t) + (j+1)*(2*t-1),t, pat_len,count);
 					flag = false;	

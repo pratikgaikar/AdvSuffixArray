@@ -11,8 +11,10 @@ using namespace std;
 /*extern variable */
 extern ofstream outFile;
 extern char *txt;
-extern vector<int> pattern_vector_e; 
+
+extern vector<int> pattern_vector_e;     
 extern vector<int> pattern_vector_b; 
+
 //void printArr(int arr[], int n, const char *txt);
 bool cmp(int a, int b);
 int *createSuffixArray(int n);

@@ -59,7 +59,7 @@ void searchEytzinger(char* pat, int n, int *suffixArray, int i, int pat_len,int*
                 }
                 else{                        
                         *count = *count + 1;
-			pattern_vector_e.push_back(suffixArray[i]); 
+			//pattern_vector_e.push_back(suffixArray[i]); 
 			searchEytzinger(pat, n, suffixArray, 2*i + 1, pat_len,count);
                         searchEytzinger(pat, n, suffixArray, 2*i + 2, pat_len,count);
                         return;
