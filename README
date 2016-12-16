@@ -15,9 +15,9 @@ Files Attached:-
         5> run.sh --> Batch script to compile and link all the 'c' files
         6> main.h --> Header file which contains global variables and function declaration
         7> test_data.fa --> Reduced size of the original input file (Human_Genome.transcript.fa)
-        8> normal_pattern.fa --> Pattern file containing strings that occurr on an average of 4.817 times
-        9> lowfrequency.fa --> Pattern file containing strings that occurr on an average of 1.01 times
-        10> highfrequency.fa --> Pattern file containing strings that occurr on an average of 5800 times
+        8> normalFrequencyPattern.fa --> Pattern file containing strings that occurr on an average of 4.817 times
+        9> nonExistingPatter.fa --> Pattern file containing strings that occurr on an average of 1.01 times
+        10> highFrequencyPattern.fa --> Pattern file containing strings that occurr on an average of 5800 times
 
 HOW TO RUN:-
 
