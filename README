@@ -11,28 +11,28 @@ How to install and download code -
 	    5> run.sh
 	    6> main.h
 
-
-INPUT TEXT FILE IS - test_data.fa
-PATTRERN FILE - present.fa
-OUTPUT FILE - test_output.fa
-
 HOW TO RUN -
+
 1> run run.sh - (sh run.sh)
 	It will compile and excute code.
 
-2> You can see menu with folloing choices- 
+2> Enter input file name. 
+
+3> You can see menu with folloing choices- 
 	1.Vanilla SERACH  
 	2.Vanilla LCP SEARACH
 	3.EYTZINGER SEARACH
 	4.BTREE SEARACH
 
-3> Enter your choice 
+4> Enter your choice 
 	1 for Vanilla SERACH 
 	2 for Vanilla LCP SEARACH
 	3 for EYTZINGER SEARACH
 	4 for BTREE SEARACH
 
-4> Once choice is enterned, check output file.
+5> Once choice is enterned, 
+   Enter pattern file name
+   check output file test_output.fa.
 
 
 Output file content format -

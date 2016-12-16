@@ -9,9 +9,12 @@ vector<int> pattern_vector_b;
 char *parseInputFile()
 {
 	string line;
+	string inputFileName;
 	const char *text = NULL;
+	cout<<"Enter input file name : ";
+	cin>>inputFileName;	
 	string skip_char = ">";
-	ifstream myfile ("/home/warlock/AdvSuffixArray/test_data.fa");
+	ifstream myfile (inputFileName.c_str());
 	if (myfile.is_open())
 	{
 		while ( getline (myfile,line) )
@@ -22,13 +25,13 @@ char *parseInputFile()
 				inputString.append("$"); 
 			}
 		}
-		cout <<"Length of input text string ->" << inputString.length() <<'\n';
+		cout <<"Length Of Input Text File :" << inputString.length() <<'\n';
 		text = inputString.c_str();
 		myfile.close();	
 	}
 	else
 	{
-		cout << "Unable to open test_data.fa";
+		cout <<"Unable to open file "<<inputFileName<<endl;
 		exit(0); 
 	}	
 	return (char *)text;
@@ -40,12 +43,17 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
 	int f, l, pat_len;
 	int start_s, stop_s;
 	int count;
-  	std::ifstream pattern_file("/home/warlock/AdvSuffixArray/present.fa", std::ios::binary | std::ios::ate); 
-    	std::streamsize pattern_size = pattern_file.tellg(); 
+	string inputPatternFileName;
+	cout<<"\nEnter pattern file name : ";
+	cin>>inputPatternFileName;
+  	ifstream pattern_file(inputPatternFileName.c_str(), std::ios::binary | std::ios::ate); 
+	if (pattern_file.is_open())
+	{
+	streamsize pattern_size = pattern_file.tellg(); 
     	pattern_file.seekg(0, std::ios::beg); 
-    	std::vector<std::string> pattern_vector; 
-    	std::vector<std::string> pattern_vector1; 
-    	std::vector<std::string> pattern_vector2; 
+    	vector<string> pattern_vector; 
+    	vector<string> pattern_vector1; 
+    	vector<string> pattern_vector2; 
     	while (getline(pattern_file, str)) 
     	{ 
         	pattern_vector.push_back(str); 
@@ -66,12 +74,12 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
 			f = search((char*)pattern_vector1[i].c_str(),suffixArray,n, pat_len);
 			l = search((char*)pattern_vector2[i].c_str(),suffixArray,n, pat_len);
 			stop_s = clock();
-			outFile <<"\t"<<l-f<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
+			outFile<<pattern_vector[i].c_str()<<"\t"<<l-f<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
 			for(int j=f;j<l;j++)
 			{
                         	outFile<<"\t"<<suffixArray[j];				
 			}
-			outFile<<'\n';  		 
+			outFile<<'\n';
 			
     		} 
 		if(choice == 2)
@@ -80,7 +88,7 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
 			f = search_with_LCP((char*)pattern_vector1[i].c_str(),suffixArray,n, pat_len);
 			l = search_with_LCP((char*)pattern_vector2[i].c_str(),suffixArray,n, pat_len);
 			stop_s = clock();
-			outFile <<"\t"<<l-f<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;	
+			outFile<<pattern_vector[i].c_str()<<"\t"<<l-f<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;	
 			for(int j=f;j<l;j++)
 			{
                         	outFile<<"\t"<<suffixArray[j];				
@@ -94,7 +102,7 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
 			start_s = clock();
                         searchEytzinger((char*)pattern_vector[i].c_str(), n, suffixArray, 0, pat_len,&count);
 			stop_s = clock();                        
-                        outFile <<"\t"<<count<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
+                        outFile<<pattern_vector[i].c_str()<<"\t"<<count<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
 			for(int j=0;j<pattern_vector_e.size();j++)
 			{
 				outFile<<"\t"<<pattern_vector_e[j];	
@@ -108,14 +116,18 @@ void parsePatFile(int n, int *suffixArray, int choice, int t)
                         start_s = clock();
                         searchBtree((char* )pattern_vector[i].c_str(), n, suffixArray, 0, t, pat_len, &count);
                         stop_s = clock();
-                        outFile <<"\t"<<count<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
+                        outFile<<pattern_vector[i].c_str()<<"\t"<<count<<"\t"<< (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000;
 			for(int j=0;j<pattern_vector_b.size();j++)
 			{
 				outFile<<"\t"<<pattern_vector_b[j];	
 			}
 			outFile<<'\n';
                 }
-
+	}
+	}
+	else
+	{
+		cout <<"\nUnable to open file"<<inputPatternFileName<<endl;
 	}    
 }
 
@@ -139,35 +151,37 @@ int main()
 		cout<<"5.EXIT"<<endl;
 		cout<<"ENTER YOUR CHOICE :";
 		cin>>choice;
+		if (!cin) {
+    			cout<<"Please input interger only choice"<<endl;
+			break;			
+		}
+		else
+		{
 		switch(choice)
 		{
 			case 1:
-				cout<<"VANILLA SERACH "<<endl;
 				system("sync; echo 3 > /proc/sys/vm/drop_caches");				
 				parsePatFile(n, suffixArray, choice, t);
 				cout <<"Check outfile test_output.fa\n" << endl;
 				break;
 			
 			case 2:
-				cout<<" VANILLA SEARCH WITH LCP "<<endl;
 				system("sync; echo 3 > /proc/sys/vm/drop_caches");
                                 parsePatFile(n, suffixArray, choice, t);
-				cout <<"Check outfile test_output.fa\n"<< endl;
+				cout <<"Check outfile test_output.fa\n" << endl;				
                                 break;
 			
 			case 3:
-				cout <<"EYTZINGER SERACH" << endl;
 				system("sync; echo 3 > /proc/sys/vm/drop_caches");
 				suffixArrayEytzinger = createSuffixArrayEytzinger(suffixArray, n);
 				parsePatFile(n, suffixArrayEytzinger, choice,t);
-				cout <<"Check outfile test_output.fa\n" << endl;
+				cout <<"Check outfile test_output.fa\n" << endl;				
 				break;
 			case 4:
-				cout <<"BTREE SERACH"<< endl;
 				system("sync; echo 3 > /proc/sys/vm/drop_caches");
 				suffixArrayBtree = createSuffixArrayBtree(suffixArray, n, t);
                                 parsePatFile(n, suffixArrayBtree, choice,t);
-				cout <<"Check outfile test_output.fa\n" << endl;
+				cout <<"Check outfile test_output.fa\n" << endl;				
 				break;
 
 			case 5: exit(0);
@@ -177,6 +191,7 @@ int main()
 				cout <<"Please select among the options provided."<< '\n';
 				break;
 		}
+	}
 	}
 	return 0;
 }
