@@ -1,40 +1,65 @@
-How to install and download code -
+How to install and download code:-
 
-1> Install git command - apt-get install git
-2> Install g++ compiler - apt-get install g++
-3> Next step is to clone code - git clone https://github.com/pratikgaikar/AdvSuffixArray
-4> Now goto dirctory - AdvSuffixArray
-   Files -  1> main.cc
-	    2> vanilla.cc
-	    3> eytzinger.cc
-	    4> btree.cc
-	    5> run.sh
-	    6> main.h
-
-HOW TO RUN -
-
-1> run run.sh - (sh run.sh)
-	It will compile and excute code.
-
-2> Enter input file name. 
-
-3> You can see menu with folloing choices- 
-	1.Vanilla SERACH  
-	2.Vanilla LCP SEARACH
-	3.EYTZINGER SEARACH
-	4.BTREE SEARACH
-
-4> Enter your choice 
-	1 for Vanilla SERACH 
-	2 for Vanilla LCP SEARACH
-	3 for EYTZINGER SEARACH
-	4 for BTREE SEARACH
-
-5> Once choice is enterned, 
-   Enter pattern file name
-   check output file test_output.fa.
+        1> Install git command - apt-get install git
+        2> Install g++ compiler - apt-get install g++
+        3> Next step is to clone code - git clone https://github.com/pratikgaikar/AdvSuffixArray
+        4> Goto the cloned dirctory - AdvSuffixArray
 
 
-Output file content format -
+Files Attached:-
 
-Pattern   Number_of_occurance    Time_required     Occurance_Index
+        1> main.cc --> Contains the code for building suffix tree and all the initializations
+        2> vanilla.cc --> Contains the code for Vanilla Search and Vinalla Search with LCP
+        3> eytzinger.cc --> Contains code for Eytzinger Search and Tree Creation
+        4> btree.cc --> Contains code for bree creation and search
+        5> run.sh --> Batch script to compile and link all the 'c' files
+        6> main.h --> Header file which contains global variables and function declaration
+        7> test_data.fa --> Reduced size of the original input file (Human_Genome.transcript.fa)
+        8> normal_pattern.fa --> Pattern file containing strings that occurr on an average of 4.817 times
+        9> lowfrequency.fa --> Pattern file containing strings that occurr on an average of 1.01 times
+        10> highfrequency.fa --> Pattern file containing strings that occurr on an average of 5800 times
+
+HOW TO RUN:-
+
+        1> run run.sh - (sh run.sh)
+                It will compile and excute code.
+
+        2> Enter input file name.
+
+        3> Select from the following choices:
+                1.Vanilla SEARCH
+                2.Vanilla LCP SEARCH
+                3.EYTZINGER SEARCH
+                4.BTREE SEARCH
+
+        4> Enter your choice
+                Select '1' for Vanilla SEARACH
+                Select '2' for Vanilla LCP SEARACH
+                Select '3' for EYTZINGER SEARACH
+                Select '4' for BTREE SEARACH
+
+        5> Once choice is enterned
+                a. Enter pattern file name
+
+        6> Output is generated in test_output.fa
+
+
+Output file content format:-
+
+        Pattern_name   Number_of_occurance    Time_required
+
+
+Pattern file format:-
+
+        Pattern 1
+        Pattern 2
+           .
+           .
+           .
+	Pattern n
+
+
+Note - 
+Delete test_output.fa file, when you want to re-run code.
+
+
