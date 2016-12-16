@@ -1,1 +1,40 @@
-TEST
+How to install and download code -
+
+1> Install git command - apt-get install git
+2> Install g++ compiler - apt-get install g++
+3> Next step is to clone code - git clone https://github.com/pratikgaikar/AdvSuffixArray
+4> Now goto dirctory - AdvSuffixArray
+   Files -  1> main.cc
+	    2> vanilla.cc
+	    3> eytzinger.cc
+	    4> btree.cc
+	    5> run.sh
+	    6> main.h
+
+
+INPUT TEXT FILE IS - test_data.fa
+PATTRERN FILE - present.fa
+OUTPUT FILE - test_output.fa
+
+HOW TO RUN -
+1> run run.sh - (sh run.sh)
+	It will compile and excute code.
+
+2> You can see menu with folloing choices- 
+	1.Vanilla SERACH  
+	2.Vanilla LCP SEARACH
+	3.EYTZINGER SEARACH
+	4.BTREE SEARACH
+
+3> Enter your choice 
+	1 for Vanilla SERACH 
+	2 for Vanilla LCP SEARACH
+	3 for EYTZINGER SEARACH
+	4 for BTREE SEARACH
+
+4> Once choice is enterned, check output file.
+
+
+Output file content format -
+
+Pattern   Number_of_occurance    Time_required     Occurance_Index
